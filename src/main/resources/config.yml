@@ -1,0 +1,28 @@
+Items:
+  warpsDefaultItem:
+    type: 'BEDROCK'
+    display-name: '&aDefault Warp'
+    lore:
+        - 'Default description'
+Menu:
+  title: '&6&lWarps'
+  item:
+    borderItem:
+      type: GRAY_STAINED_GLASS_PANE
+      display-name: '&f'
+      lore:
+    previousPage:
+      type: ARROW
+      display-name: '&7Previous page'
+      lore:
+    actualPage:
+      type: GREEN_STAINED_GLASS_PANE
+      display-name: '&7Page &a&l%actualPlayerPage% &7/ &c&l%maxPage%'
+    nextPage:
+      type: ARROW
+      display-name: '&7Next page'
+      lore:
+    closeMenu:
+      type: BARRIER
+      display-name: '&c&lClose'
+      lore:
