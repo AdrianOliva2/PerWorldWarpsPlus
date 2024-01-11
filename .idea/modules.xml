@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/PerWorldWarpsPlus.main.iml" filepath="$PROJECT_DIR$/.idea/modules/PerWorldWarpsPlus.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/PerWorldWarpsPlus.test.iml" filepath="$PROJECT_DIR$/.idea/modules/PerWorldWarpsPlus.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/net.serveminecraft.minecrafteros.PerWorldWarpsPlus.main.iml" filepath="$PROJECT_DIR$/.idea/modules/net.serveminecraft.minecrafteros.PerWorldWarpsPlus.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/net.serveminecraft.minecrafteros.PerWorldWarpsPlus.test.iml" filepath="$PROJECT_DIR$/.idea/modules/net.serveminecraft.minecrafteros.PerWorldWarpsPlus.test.iml" />
     </modules>
   </component>
 </project>

@@ -15,6 +15,7 @@ import org.bukkit.inventory.Inventory
 class WarpCommand(private val plugin: PerWorldWarpsPlus): CommandExecutor {
 
     private val replaces: HashMap<String, String> = HashMap()
+    private val messagesConfig: FileConfiguration = plugin.messagesConfigFile
 
     init {
         replaces["%prefix%"] = plugin.prefix
@@ -28,14 +29,14 @@ class WarpCommand(private val plugin: PerWorldWarpsPlus): CommandExecutor {
         val pitch: Float = warpsConfig.getDouble("Worlds.${player.world.name}.$warpName.pitch").toFloat()
         val location = Location(player.world, x, y, z, yaw, pitch)
         replaces["%warp%"] = warpName
-        player.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullMessageFromConfig(plugin, "teleporting-to-warp", replaces)))
+        player.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(messagesConfig, "teleporting-to-warp", replaces)))
         replaces.remove("%warp%")
         player.teleport(location)
     }
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
         if (sender !is Player) {
-            sender.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullMessageFromConfig(plugin, "console-command-error", replaces)))
+            sender.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(messagesConfig, "console-command-error", replaces)))
             return false
         } else {
             val player: Player = sender
@@ -48,19 +49,19 @@ class WarpCommand(private val plugin: PerWorldWarpsPlus): CommandExecutor {
                             if (player.isOp || player.hasPermission(warpsConfig.getString("Worlds.${player.world.name}.$warpName.permission")!!)){
                                 teleport(player, warpsConfig, args[0])
                             } else {
-                                player.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullMessageFromConfig(plugin, "no-permission", replaces)))
+                                player.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(messagesConfig, "no-permission", replaces)))
                             }
                         } else {
                             teleport(player, warpsConfig, args[0])
                         }
                     } else {
                         replaces["%warp%"] = warpName
-                        player.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullMessageFromConfig(plugin, "warp-not-exists", replaces)))
+                        player.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(messagesConfig, "warp-not-exists", replaces)))
                         replaces.remove("%warp%")
                         return false
                     }
                 } else {
-                    player.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullMessageFromConfig(plugin, "warp-command-help", replaces)))
+                    player.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(messagesConfig, "warp-command-help", replaces)))
                     return false
                 }
             } else {

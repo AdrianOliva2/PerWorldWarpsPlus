@@ -12,7 +12,10 @@ import org.bukkit.entity.Player
 
 class DelWarpCommand(private val plugin: PerWorldWarpsPlus): CommandExecutor {
 
+    //TODO: Review why residual lines are left in the warps.yml file when deleting a warp
+
     private val replaces: HashMap<String, String> = HashMap()
+    private val messagesConfig: FileConfiguration = plugin.messagesConfigFile
 
     init {
         replaces["%prefix%"] = plugin.prefix
@@ -38,13 +41,13 @@ class DelWarpCommand(private val plugin: PerWorldWarpsPlus): CommandExecutor {
         plugin.saveWarpsConfig()
         plugin.reloadWarpsConfig()
         replaces["%warp%"] = warpName
-        player.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullMessageFromConfig(plugin, "warp-deleted-successfully", replaces)))
+        player.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(messagesConfig, "warp-deleted-successfully", replaces)))
         replaces.remove("%warp%")
     }
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
         if (sender !is Player) {
-            val message: TextComponent = LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullMessageFromConfig(plugin, "console-command-error", replaces))
+            val message: TextComponent = LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(messagesConfig, "console-command-error", replaces))
             sender.sendMessage(message)
             return false
         } else {
@@ -56,18 +59,17 @@ class DelWarpCommand(private val plugin: PerWorldWarpsPlus): CommandExecutor {
                     if (warpsConfig.contains("Worlds.${player.world.name}.${args[0]}")) {
                         removeWarp(args[0], warpsConfig, player)
                     } else {
-                        val message: TextComponent = LegacyComponentSerializer.legacyAmpersand().deserialize(
-                            MessagesUtil.getFullMessageFromConfig(plugin, "warp-not-exists", replaces))
+                        val message: TextComponent = LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(messagesConfig, "warp-not-exists", replaces))
                         player.sendMessage(message)
                     }
                     replaces.remove("%warp%")
                 } else {
-                    val message: TextComponent = LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullMessageFromConfig(plugin, "delwarp-command-help", replaces))
+                    val message: TextComponent = LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(messagesConfig, "delwarp-command-help", replaces))
                     player.sendMessage(message)
                     return false
                 }
             } else {
-                player.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullMessageFromConfig(plugin, "no-permission", replaces)))
+                player.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(messagesConfig, "no-permission", replaces)))
                 return false
             }
         }

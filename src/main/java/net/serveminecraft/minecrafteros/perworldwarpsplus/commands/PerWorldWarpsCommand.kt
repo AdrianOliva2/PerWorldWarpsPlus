@@ -6,11 +6,13 @@ import net.serveminecraft.minecrafteros.perworldwarpsplus.PerWorldWarpsPlus
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
+import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.Player
 
 class PerWorldWarpsCommand(private val plugin: PerWorldWarpsPlus): CommandExecutor {
 
     private val replaces: HashMap<String, String> = HashMap()
+    private val messagesConfig: FileConfiguration = plugin.messagesConfigFile
 
     init {
         replaces["%prefix%"] = plugin.prefix
@@ -18,13 +20,15 @@ class PerWorldWarpsCommand(private val plugin: PerWorldWarpsPlus): CommandExecut
 
     private fun help(sender: CommandSender): Boolean {
         return if ((sender is Player && sender.isOp || sender.hasPermission("perworldwarps.help")) || sender !is Player) {
-            val messageList: MutableList<String> = MessagesUtil.getFullMessageListFromConfig(plugin, "help", replaces)
-            for (message in messageList) {
-                sender.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(message))
+            val messageList: MutableList<String>? = MessagesUtil.colorizeList(MessagesUtil.getFullStringListFromConfig(plugin.messagesConfigFile, "help", replaces))
+            if (messageList != null) {
+                for (message in messageList) {
+                    sender.sendMessage(message)
+                }
             }
             true
         } else {
-            sender.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullMessageFromConfig(plugin, "no-permission", replaces)))
+            sender.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(messagesConfig, "no-permission", replaces)))
             false
         }
     }
@@ -50,9 +54,9 @@ class PerWorldWarpsCommand(private val plugin: PerWorldWarpsPlus): CommandExecut
                     "reload" -> {
                         if ((sender is Player && sender.isOp || sender.hasPermission("perworldwarps.reload")) || sender !is Player) {
                             reload()
-                            sender.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullMessageFromConfig(plugin, "plugin-reloaded-successfully", replaces)))
+                            sender.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(messagesConfig, "plugin-reloaded-successfully", replaces)))
                         } else {
-                            sender.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullMessageFromConfig(plugin, "no-permission", replaces)))
+                            sender.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(messagesConfig, "no-permission", replaces)))
                             return false
                         }
                     }

@@ -18,6 +18,7 @@ import org.bukkit.inventory.meta.ItemMeta
 class SetWarpCommand(private val plugin: PerWorldWarpsPlus): CommandExecutor {
 
     private val replaces: HashMap<String, String> = HashMap()
+    private val messagesConfig: FileConfiguration = plugin.messagesConfigFile
 
     init {
         replaces["%prefix%"] = plugin.prefix
@@ -30,8 +31,8 @@ class SetWarpCommand(private val plugin: PerWorldWarpsPlus): CommandExecutor {
             val config: FileConfiguration = plugin.config
             item = ItemStack(Material.getMaterial(config.getString("Items.warpsDefaultItem.type")!!)!!, 1)
             val itemMeta: ItemMeta = item.itemMeta
-            itemMeta.displayName(LegacyComponentSerializer.legacyAmpersand().deserialize(config.getString("Items.warpsDefaultItem.display-name")!!))
-            itemMeta.lore(ListUtils.stringListToComponentList(config.getStringList("Items.warpsDefaultItem.lore")))
+            itemMeta.displayName(LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(config, "Items.warpsDefaultItem.display-name", replaces)))
+            itemMeta.lore(ListUtils.stringListToComponentList(MessagesUtil.colorizeList(MessagesUtil.getFullStringListFromConfig(config, "Items.warpsDefaultItem.lore", replaces))))
             item.itemMeta = itemMeta
         }
         val warpsConfig: FileConfiguration = plugin.warpsConfigFile
@@ -49,7 +50,7 @@ class SetWarpCommand(private val plugin: PerWorldWarpsPlus): CommandExecutor {
                 LegacyComponentSerializer.legacyAmpersand().serialize(itemMeta.displayName()!!)
             else
                 LegacyComponentSerializer.legacyAmpersand().serialize(item.displayName())
-            val itemLore: MutableList<String>? = ListUtils.componentListToStringList(itemMeta.lore())
+            val itemLore: MutableList<String>? = MessagesUtil.colorizeList(ListUtils.componentListToStringList(itemMeta.lore()))
             warpsConfig.set("Worlds.${world.name}.$warpName.x", x)
             warpsConfig.set("Worlds.${world.name}.$warpName.y", y)
             warpsConfig.set("Worlds.${world.name}.$warpName.z", z)
@@ -65,17 +66,11 @@ class SetWarpCommand(private val plugin: PerWorldWarpsPlus): CommandExecutor {
                 warpsConfig.set("Worlds.${world.name}.$warpName.permission", "perworldwarps.warp.$warpName")
 
             plugin.saveWarpsConfig()
-            val message = LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullMessageFromConfig(plugin, "warp-created-successfully", replaces))
+            plugin.reloadWarpsConfig();
+            val message = LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(messagesConfig, "warp-created-successfully", replaces))
             player.sendMessage(message)
         } else {
-            val message = LegacyComponentSerializer.legacyAmpersand()
-                .deserialize(
-                    MessagesUtil.getFullMessageFromConfig(
-                        plugin,
-                        "warp-already-exists",
-                        replaces
-                    )
-                )
+            val message = LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(messagesConfig, "warp-already-exists", replaces))
             player.sendMessage(message)
         }
         replaces.remove("%warp%")
@@ -83,7 +78,7 @@ class SetWarpCommand(private val plugin: PerWorldWarpsPlus): CommandExecutor {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
         if (sender !is Player) {
-            sender.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullMessageFromConfig(plugin, "console-command-error", replaces)))
+            sender.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(messagesConfig, "console-command-error", replaces)))
         } else {
             val player: Player = sender
             if (player.isOp || player.hasPermission("perworldwarps.setwarp")) {
@@ -97,21 +92,21 @@ class SetWarpCommand(private val plugin: PerWorldWarpsPlus): CommandExecutor {
                                 val permission: Boolean = args[1].toBoolean()
                                 setWarp(player, args[0], permission)
                             } else {
-                                val message = LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullMessageFromConfig(plugin, "setwarp-command-help", replaces))
+                                val message = LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(messagesConfig, "setwarp-command-help", replaces))
                                 player.sendMessage(message)
                             }
                         }
                         else -> {
-                            val message = LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullMessageFromConfig(plugin, "setwarp-command-help", replaces))
+                            val message = LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(messagesConfig, "setwarp-command-help", replaces))
                             player.sendMessage(message)
                         }
                     }
                 } else {
-                    val message = LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullMessageFromConfig(plugin, "setwarp-command-help", replaces))
+                    val message = LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(messagesConfig, "setwarp-command-help", replaces))
                     player.sendMessage(message)
                 }
             } else {
-                player.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullMessageFromConfig(plugin, "no-permission", replaces)))
+                player.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(messagesConfig, "no-permission", replaces)))
                 return false
             }
         }

@@ -1,9 +1,9 @@
 Items:
   warpsDefaultItem:
-    type: 'BEDROCK'
-    display-name: '&aDefault Warp'
+    type: 'GRASS_BLOCK'
+    display-name: '&7Warp &e%warp%'
     lore:
-        - 'Default description'
+      - '&eThis is the warp &c%warp%'
 Menu:
   title: '&6&lWarps'
   item:
