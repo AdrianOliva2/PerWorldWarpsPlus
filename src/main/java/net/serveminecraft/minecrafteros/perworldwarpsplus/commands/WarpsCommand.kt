@@ -4,6 +4,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import net.serveminecraft.minecrafteros.perworldwarpsplus.managers.InventoryManager
 import net.serveminecraft.minecrafteros.perworldwarpsplus.utils.MessagesUtil
 import net.serveminecraft.minecrafteros.perworldwarpsplus.PerWorldWarpsPlus
+import org.bukkit.World
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -19,7 +20,7 @@ class WarpsCommand(private val plugin: PerWorldWarpsPlus): CommandExecutor {
         replaces["%prefix%"] = plugin.prefix
     }
 
-    fun getAvailableWarps(player: Player): MutableList<String>? {
+    fun getAvailableWarpsForPlayer(player: Player): MutableList<String>? {
         val warpsConfig: FileConfiguration = plugin.warpsConfigFile
         val warps: MutableSet<String>? = warpsConfig.getConfigurationSection("Worlds.${player.world.name}")?.getKeys(false)
 
@@ -33,6 +34,21 @@ class WarpsCommand(private val plugin: PerWorldWarpsPlus): CommandExecutor {
                 } else {
                     warpsList += warp
                 }
+            }
+            return warpsList.sorted().toMutableList()
+        }
+
+        return null
+    }
+
+    fun getAvailableWarpsForConsole(world: World): MutableList<String>? {
+        val warpsConfig: FileConfiguration = plugin.warpsConfigFile
+        val warps: MutableSet<String>? = warpsConfig.getConfigurationSection("Worlds.${world.name}")?.getKeys(false)
+
+        if (warps != null) {
+            val warpsList: MutableList<String> = mutableListOf()
+            for (warp: String in warps) {
+                warpsList += warp
             }
             return warpsList.sorted().toMutableList()
         }

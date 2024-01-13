@@ -121,7 +121,7 @@ class InventoryManager private constructor(private val plugin: PerWorldWarpsPlus
         material = config.getString("Menu.item.nextPage.type")
         val nextPageItem = ItemStack(Material.getMaterial(material!!)!!)
         val warpsCommand = WarpsCommand(plugin)
-        val warpsItems = getWarpsItemsList(player.world, warpsCommand.getAvailableWarps(player))
+        val warpsItems = getWarpsItemsList(player.world, warpsCommand.getAvailableWarpsForPlayer(player))
         val inventoryTitle = config.getString("Menu.title")!!
         val inventory = Bukkit.createInventory(player, 54, LegacyComponentSerializer.legacyAmpersand().deserialize(inventoryTitle))
         val actualPlayerPage: Int?

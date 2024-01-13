@@ -15,8 +15,6 @@ import org.bukkit.entity.Player
 
 class DelWarpCommand(private val plugin: PerWorldWarpsPlus): CommandExecutor {
 
-    //TODO: Review why residual lines are left in the warps.yml file when deleting a warp
-
     private val replaces: HashMap<String, String> = HashMap()
     private val messagesConfig: FileConfiguration = plugin.messagesConfigFile
 
