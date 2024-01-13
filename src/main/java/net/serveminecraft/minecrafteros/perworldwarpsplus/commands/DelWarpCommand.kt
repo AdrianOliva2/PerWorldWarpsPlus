@@ -4,6 +4,9 @@ import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import net.serveminecraft.minecrafteros.perworldwarpsplus.utils.MessagesUtil
 import net.serveminecraft.minecrafteros.perworldwarpsplus.PerWorldWarpsPlus
+import net.serveminecraft.minecrafteros.perworldwarpsplus.managers.InventoryManager
+import org.bukkit.Bukkit
+import org.bukkit.World
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -21,8 +24,8 @@ class DelWarpCommand(private val plugin: PerWorldWarpsPlus): CommandExecutor {
         replaces["%prefix%"] = plugin.prefix
     }
 
-    private fun removeWarp(warpName: String, warpsConfig: FileConfiguration, player: Player) {
-        val warpsSection: MutableMap<String, Any> = warpsConfig.getConfigurationSection("Worlds.${player.world.name}")!!.getValues(true)
+    private fun removeWarp(warpName: String, warpsConfig: FileConfiguration, world: World) {
+        val warpsSection: MutableMap<String, Any> = warpsConfig.getConfigurationSection("Worlds.${world.name}")!!.getValues(true)
         val warpKeys: List<String> = warpsSection.keys.toList()
         val warpValues: List<Any> = warpsSection.values.toList()
         for (i in 0..<warpsSection.size) {
@@ -32,32 +35,51 @@ class DelWarpCommand(private val plugin: PerWorldWarpsPlus): CommandExecutor {
                 val warpKeyName: String = warpKey.split('.')[0]
                 val warpValueClassNameSplit: List<String> = warpValue.javaClass.name.split('.')
                 val warpValueClassName: String = warpValueClassNameSplit[warpValueClassNameSplit.size-1]
-                if (warpKeyName.equals(warpName, false) || !warpValueClassName.equals("MemorySection", true)) {
+                if (warpKeyName.equals(warpName, false) || warpKey.contains(".item", false) || !warpValueClassName.equals("MemorySection", true)) {
                     warpsSection.remove(warpKey)
                 }
             }
         }
-        warpsConfig.set("Worlds.${player.world.name}", warpsSection)
+        warpsConfig.set("Worlds.${world.name}", warpsSection)
         plugin.saveWarpsConfig()
         plugin.reloadWarpsConfig()
-        replaces["%warp%"] = warpName
-        player.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(messagesConfig, "warp-deleted-successfully", replaces)))
-        replaces.remove("%warp%")
+        val inventoryManager = InventoryManager.getInstance(plugin)
+        inventoryManager.reloadAllWarpInventories()
     }
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
+        val warpsConfig: FileConfiguration = plugin.warpsConfigFile
         if (sender !is Player) {
-            val message: TextComponent = LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(messagesConfig, "console-command-error", replaces))
-            sender.sendMessage(message)
+            if (args != null && args.size == 2) {
+                val world: World? = Bukkit.getWorld(args[0])
+                if (world != null) {
+                    replaces["%warp%"] = args[1]
+                    if (warpsConfig.contains("Worlds.${world.name}.${args[1]}")) {
+                        removeWarp(args[1], warpsConfig, world)
+                        sender.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(messagesConfig, "warp-deleted-successfully", replaces)))
+                    } else {
+                        val message: TextComponent = LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(messagesConfig, "warp-not-exists", replaces))
+                        sender.sendMessage(message)
+                    }
+                    replaces.remove("%warp%")
+                } else {
+                    replaces["%world%"] = args[0]
+                    sender.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(messagesConfig, "console-world-not-exists", replaces)))
+                    replaces.remove("%world%")
+                }
+                return true
+            } else {
+                sender.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(messagesConfig, "console-delwarp-command-help", replaces)))
+            }
             return false
         } else {
             val player: Player = sender
             if (player.isOp || player.hasPermission("perworldwarps.delwarp")) {
                 if (args != null && args.size == 1) {
-                    val warpsConfig: FileConfiguration = plugin.warpsConfigFile
                     replaces["%warp%"] = args[0]
                     if (warpsConfig.contains("Worlds.${player.world.name}.${args[0]}")) {
-                        removeWarp(args[0], warpsConfig, player)
+                        removeWarp(args[0], warpsConfig, player.world)
+                        player.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(messagesConfig, "warp-deleted-successfully", replaces)))
                     } else {
                         val message: TextComponent = LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(messagesConfig, "warp-not-exists", replaces))
                         player.sendMessage(message)

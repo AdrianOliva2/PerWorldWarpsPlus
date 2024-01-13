@@ -3,6 +3,7 @@ package net.serveminecraft.minecrafteros.perworldwarpsplus.commands
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import net.serveminecraft.minecrafteros.perworldwarpsplus.utils.MessagesUtil
 import net.serveminecraft.minecrafteros.perworldwarpsplus.PerWorldWarpsPlus
+import net.serveminecraft.minecrafteros.perworldwarpsplus.managers.InventoryManager
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -38,6 +39,8 @@ class PerWorldWarpsCommand(private val plugin: PerWorldWarpsPlus): CommandExecut
         plugin.saveDefaultConfig()
         plugin.reloadWarpsConfig()
         plugin.reloadMessagesConfig()
+        val inventoryManager: InventoryManager = InventoryManager.getInstance(plugin)
+        inventoryManager.reloadAllWarpInventories()
     }
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {

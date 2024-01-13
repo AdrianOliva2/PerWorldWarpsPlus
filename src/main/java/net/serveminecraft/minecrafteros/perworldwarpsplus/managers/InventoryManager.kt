@@ -24,16 +24,34 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.persistence.PersistentDataType
 
-class InventoryManager(private val plugin: PerWorldWarpsPlus) : Listener {
+class InventoryManager private constructor(private val plugin: PerWorldWarpsPlus) : Listener {
+
+    companion object {
+        private lateinit var instance: InventoryManager
+        fun getInstance(plugin: PerWorldWarpsPlus): InventoryManager {
+            if (!this::instance.isInitialized) instance = InventoryManager(plugin)
+            return instance
+        }
+    }
+
     private val actualPlayersPage: MutableMap<Player, Int>
     private val config: FileConfiguration
-    private val warpsConfiguration: FileConfiguration
-    private var changed = false
+    private var warpsConfiguration: FileConfiguration
+    private var opened = false
 
     init {
         actualPlayersPage = HashMap()
         config = plugin.config
         warpsConfiguration = plugin.warpsConfigFile
+    }
+
+    fun reloadAllWarpInventories() {
+        warpsConfiguration = plugin.warpsConfigFile
+        val playersWithWarpsInventoryOpened: MutableList<Player> = actualPlayersPage.keys.toMutableList()
+        actualPlayersPage.clear()
+        for (player: Player in playersWithWarpsInventoryOpened) {
+            player.openInventory(createInventory(player))
+        }
     }
 
     private fun getComponentsLoreList(originalLore: MutableList<*>?): MutableList<TextComponent>? {
@@ -111,6 +129,7 @@ class InventoryManager(private val plugin: PerWorldWarpsPlus) : Listener {
             actualPlayerPage = 1
             actualPlayersPage[player] = 1
         }
+        opened = true
         player.closeInventory()
         val rows: Int = inventory.size / 9
         fillBorders(inventory, rows)
@@ -168,7 +187,7 @@ class InventoryManager(private val plugin: PerWorldWarpsPlus) : Listener {
             inventory.setItem(inventory.firstEmpty(), warpsItems[i])
             i++
         }
-        changed = false
+        opened = false
         return inventory
     }
 
@@ -204,7 +223,6 @@ class InventoryManager(private val plugin: PerWorldWarpsPlus) : Listener {
                         } else {
                             actualPlayersPage[playerClicked] = actualPage - 1
                         }
-                        changed = true
                         playerClicked.openInventory(createInventory(playerClicked))
                         return
                     }
@@ -229,9 +247,7 @@ class InventoryManager(private val plugin: PerWorldWarpsPlus) : Listener {
         if (event.player.type == EntityType.PLAYER) {
             val player = event.player as Player
             if (actualPlayersPage.containsKey(player)) {
-                if (!changed) {
-                    actualPlayersPage.remove(event.player)
-                }
+                if (!opened) actualPlayersPage.remove(player)
             }
         }
     }

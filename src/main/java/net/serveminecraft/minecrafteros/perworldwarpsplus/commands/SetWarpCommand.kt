@@ -4,6 +4,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import net.serveminecraft.minecrafteros.perworldwarpsplus.utils.ListUtils
 import net.serveminecraft.minecrafteros.perworldwarpsplus.utils.MessagesUtil
 import net.serveminecraft.minecrafteros.perworldwarpsplus.PerWorldWarpsPlus
+import net.serveminecraft.minecrafteros.perworldwarpsplus.managers.InventoryManager
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.World
@@ -66,7 +67,9 @@ class SetWarpCommand(private val plugin: PerWorldWarpsPlus): CommandExecutor {
                 warpsConfig.set("Worlds.${world.name}.$warpName.permission", "perworldwarps.warp.$warpName")
 
             plugin.saveWarpsConfig()
-            plugin.reloadWarpsConfig();
+            plugin.reloadWarpsConfig()
+            val inventoryManager: InventoryManager = InventoryManager.getInstance(plugin)
+            inventoryManager.reloadAllWarpInventories()
             val message = LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(messagesConfig, "warp-created-successfully", replaces))
             player.sendMessage(message)
         } else {

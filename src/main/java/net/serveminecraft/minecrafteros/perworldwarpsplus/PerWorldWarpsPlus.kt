@@ -59,7 +59,8 @@ class PerWorldWarpsPlus : JavaPlugin() {
 
     private fun registerEvents() {
         val pm: PluginManager = this.server.pluginManager
-        pm.registerEvents(InventoryManager(this), this)
+        val inventoryManager: InventoryManager = InventoryManager.getInstance(this)
+        pm.registerEvents(inventoryManager, this)
     }
 
     fun saveWarpsConfig() {

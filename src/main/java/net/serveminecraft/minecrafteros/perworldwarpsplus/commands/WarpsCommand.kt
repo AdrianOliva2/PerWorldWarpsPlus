@@ -47,7 +47,7 @@ class WarpsCommand(private val plugin: PerWorldWarpsPlus): CommandExecutor {
             return false
         } else {
             val player: Player = sender
-            val inventoryManager = InventoryManager(plugin)
+            val inventoryManager = InventoryManager.getInstance(plugin)
             val inventory: Inventory = inventoryManager.createInventory(player)
             player.openInventory(inventory)
         }
