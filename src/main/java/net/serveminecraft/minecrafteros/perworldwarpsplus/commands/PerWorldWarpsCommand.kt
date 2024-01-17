@@ -1,9 +1,11 @@
 package net.serveminecraft.minecrafteros.perworldwarpsplus.commands
 
+import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import net.serveminecraft.minecrafteros.perworldwarpsplus.utils.MessagesUtil
 import net.serveminecraft.minecrafteros.perworldwarpsplus.PerWorldWarpsPlus
 import net.serveminecraft.minecrafteros.perworldwarpsplus.managers.InventoryManager
+import net.serveminecraft.minecrafteros.perworldwarpsplus.utils.ListUtils
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -13,7 +15,7 @@ import org.bukkit.entity.Player
 class PerWorldWarpsCommand(private val plugin: PerWorldWarpsPlus): CommandExecutor {
 
     private val replaces: HashMap<String, String> = HashMap()
-    private val messagesConfig: FileConfiguration = plugin.messagesConfigFile
+    private var messagesConfig: FileConfiguration = plugin.messagesConfigFile
 
     init {
         replaces["%prefix%"] = plugin.prefix
@@ -21,7 +23,7 @@ class PerWorldWarpsCommand(private val plugin: PerWorldWarpsPlus): CommandExecut
 
     private fun help(sender: CommandSender): Boolean {
         return if ((sender is Player && sender.isOp || sender.hasPermission("perworldwarps.help")) || sender !is Player) {
-            val messageList: MutableList<String>? = MessagesUtil.colorizeList(MessagesUtil.getFullStringListFromConfig(plugin.messagesConfigFile, "help", replaces))
+            val messageList: MutableList<Component>? = ListUtils.stringListToComponentList(MessagesUtil.getFullStringListFromConfig(plugin.messagesConfigFile, "help", replaces))
             if (messageList != null) {
                 for (message in messageList) {
                     sender.sendMessage(message)
@@ -37,8 +39,11 @@ class PerWorldWarpsCommand(private val plugin: PerWorldWarpsPlus): CommandExecut
     private fun reload() {
         plugin.reloadConfig()
         plugin.saveDefaultConfig()
+        plugin.saveConfig()
         plugin.reloadWarpsConfig()
         plugin.reloadMessagesConfig()
+        messagesConfig = plugin.messagesConfigFile
+        replaces["%prefix%"] = plugin.prefix
         val inventoryManager: InventoryManager = InventoryManager.getInstance(plugin)
         inventoryManager.reloadAllWarpInventories()
     }

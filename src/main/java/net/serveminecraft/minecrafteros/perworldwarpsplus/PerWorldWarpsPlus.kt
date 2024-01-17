@@ -5,6 +5,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import net.serveminecraft.minecrafteros.perworldwarpsplus.commands.*
 import net.serveminecraft.minecrafteros.perworldwarpsplus.configs.CustomConfig
 import net.serveminecraft.minecrafteros.perworldwarpsplus.managers.InventoryManager
+import net.serveminecraft.minecrafteros.perworldwarpsplus.tabcompleters.SetWarpCompleter
 import net.serveminecraft.minecrafteros.perworldwarpsplus.tabcompleters.SubCommandsCompleter
 import net.serveminecraft.minecrafteros.perworldwarpsplus.tabcompleters.WarpsCompleter
 import org.bukkit.command.PluginCommand
@@ -53,6 +54,7 @@ class PerWorldWarpsPlus : JavaPlugin() {
         getCommand("warp")?.tabCompleter = WarpsCompleter(this)
         getCommand("warps")?.setExecutor(WarpsCommand(this))
         getCommand("setwarp")?.setExecutor(SetWarpCommand(this))
+        getCommand("setwarp")?.tabCompleter = SetWarpCompleter()
         getCommand("delwarp")?.setExecutor(DelWarpCommand(this))
         getCommand("delwarp")?.tabCompleter = WarpsCompleter(this)
     }
@@ -69,11 +71,13 @@ class PerWorldWarpsPlus : JavaPlugin() {
 
     fun reloadWarpsConfig() {
         warpsConfig.reloadConfig()
+        saveWarpsConfig()
         warpsConfigFile = warpsConfig.getConfig()
     }
 
     fun reloadMessagesConfig() {
         messagesConfig.reloadConfig()
+        messagesConfig.saveConfig()
         messagesConfigFile = messagesConfig.getConfig()
         prefix = messagesConfigFile.getString("prefix", "")!!
     }

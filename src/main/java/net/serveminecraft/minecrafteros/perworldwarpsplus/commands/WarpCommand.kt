@@ -15,7 +15,7 @@ import org.bukkit.inventory.Inventory
 class WarpCommand(private val plugin: PerWorldWarpsPlus): CommandExecutor {
 
     private val replaces: HashMap<String, String> = HashMap()
-    private val messagesConfig: FileConfiguration = plugin.messagesConfigFile
+    private var messagesConfig: FileConfiguration = plugin.messagesConfigFile
 
     init {
         replaces["%prefix%"] = plugin.prefix
@@ -35,6 +35,8 @@ class WarpCommand(private val plugin: PerWorldWarpsPlus): CommandExecutor {
     }
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
+        messagesConfig = plugin.messagesConfigFile
+        replaces["%prefix%"] = plugin.prefix
         if (sender !is Player) {
             sender.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(messagesConfig, "console-command-error", replaces)))
             return false

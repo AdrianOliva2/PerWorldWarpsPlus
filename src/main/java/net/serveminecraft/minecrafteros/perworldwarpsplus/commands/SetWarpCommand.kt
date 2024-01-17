@@ -1,5 +1,6 @@
 package net.serveminecraft.minecrafteros.perworldwarpsplus.commands
 
+import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import net.serveminecraft.minecrafteros.perworldwarpsplus.utils.ListUtils
 import net.serveminecraft.minecrafteros.perworldwarpsplus.utils.MessagesUtil
@@ -19,7 +20,7 @@ import org.bukkit.inventory.meta.ItemMeta
 class SetWarpCommand(private val plugin: PerWorldWarpsPlus): CommandExecutor {
 
     private val replaces: HashMap<String, String> = HashMap()
-    private val messagesConfig: FileConfiguration = plugin.messagesConfigFile
+    private var messagesConfig: FileConfiguration = plugin.messagesConfigFile
 
     init {
         replaces["%prefix%"] = plugin.prefix
@@ -33,7 +34,7 @@ class SetWarpCommand(private val plugin: PerWorldWarpsPlus): CommandExecutor {
             item = ItemStack(Material.getMaterial(config.getString("Items.warpsDefaultItem.type")!!)!!, 1)
             val itemMeta: ItemMeta = item.itemMeta
             itemMeta.displayName(LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(config, "Items.warpsDefaultItem.display-name", replaces)))
-            itemMeta.lore(ListUtils.stringListToComponentList(MessagesUtil.colorizeList(MessagesUtil.getFullStringListFromConfig(config, "Items.warpsDefaultItem.lore", replaces))))
+            itemMeta.lore(ListUtils.stringListToComponentList(MessagesUtil.getFullStringListFromConfig(config, "Items.warpsDefaultItem.lore", replaces)))
             item.itemMeta = itemMeta
         }
         val warpsConfig: FileConfiguration = plugin.warpsConfigFile
@@ -51,7 +52,7 @@ class SetWarpCommand(private val plugin: PerWorldWarpsPlus): CommandExecutor {
                 LegacyComponentSerializer.legacyAmpersand().serialize(itemMeta.displayName()!!)
             else
                 LegacyComponentSerializer.legacyAmpersand().serialize(item.displayName())
-            val itemLore: MutableList<String>? = MessagesUtil.colorizeList(ListUtils.componentListToStringList(itemMeta.lore()))
+            val itemLore: MutableList<String>? = ListUtils.componentListToStringList(itemMeta.lore())
             warpsConfig.set("Worlds.${world.name}.$warpName.x", x)
             warpsConfig.set("Worlds.${world.name}.$warpName.y", y)
             warpsConfig.set("Worlds.${world.name}.$warpName.z", z)
@@ -80,6 +81,8 @@ class SetWarpCommand(private val plugin: PerWorldWarpsPlus): CommandExecutor {
     }
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
+        messagesConfig = plugin.messagesConfigFile
+        replaces["%prefix%"] = plugin.prefix
         if (sender !is Player) {
             sender.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(messagesConfig, "console-command-error", replaces)))
         } else {

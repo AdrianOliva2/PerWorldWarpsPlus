@@ -14,7 +14,7 @@ class WarpsCompleter(val plugin: PerWorldWarpsPlus): TabCompleter {
     override fun onTabComplete(sender: CommandSender, command: Command, label: String, args: Array<out String>?): MutableList<String>? {
         val warpsCommand = WarpsCommand(plugin)
         if (sender !is Player){
-            if (label != "delwarp") return null
+            if (label != "delwarp") return emptyList<String>().toMutableList()
 
             if (args != null) {
                 if (args.size == 1) {
@@ -25,17 +25,17 @@ class WarpsCompleter(val plugin: PerWorldWarpsPlus): TabCompleter {
                     }
                     return worldNames
                 } else if (args.size == 2) {
-                    val world: World? = Bukkit.getWorld(args[0])
-
-                    if (world == null) return null
+                    val world: World = Bukkit.getWorld(args[0]) ?: return emptyList<String>().toMutableList()
 
                     return warpsCommand.getAvailableWarpsForConsole(world)
                 }
             }
 
-            return null
+            return emptyList<String>().toMutableList()
         } else {
             val player: Player = sender
+            if (label == "delwarp" && (!player.isOp && !player.hasPermission("perworldwarps.delwarp")))
+                return emptyList<String>().toMutableList()
             return warpsCommand.getAvailableWarpsForPlayer(player)
         }
     }

@@ -35,7 +35,7 @@ class InventoryManager private constructor(private val plugin: PerWorldWarpsPlus
     }
 
     private val actualPlayersPage: MutableMap<Player, Int>
-    private val config: FileConfiguration
+    private var config: FileConfiguration
     private var warpsConfiguration: FileConfiguration
     private var opened = false
 
@@ -46,6 +46,7 @@ class InventoryManager private constructor(private val plugin: PerWorldWarpsPlus
     }
 
     fun reloadAllWarpInventories() {
+        config = plugin.config
         warpsConfiguration = plugin.warpsConfigFile
         val playersWithWarpsInventoryOpened: MutableList<Player> = actualPlayersPage.keys.toMutableList()
         actualPlayersPage.clear()
