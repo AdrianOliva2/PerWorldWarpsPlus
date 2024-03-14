@@ -22,7 +22,7 @@ class PerWorldWarpsPlus : JavaPlugin() {
     }
 
     @Suppress("UnstableApiUsage")
-    private val pluginMeta: PluginMeta = this.getPluginMeta()
+    private val pluginMeta: PluginMeta = getPluginMeta()
     private val pluginName: String = pluginMeta.name
     private val pluginVersion: String = pluginMeta.version
     private lateinit var warpsConfig: CustomConfig
@@ -32,36 +32,39 @@ class PerWorldWarpsPlus : JavaPlugin() {
     var prefix: String = ""
 
     override fun onEnable() {
-        config.options().copyDefaults()
-        saveDefaultConfig()
-        warpsConfig = CustomConfig("warps.yml", this)
-        warpsConfigFile = warpsConfig.getConfig()
-        messagesConfig = CustomConfig("messages.yml", this)
-        messagesConfigFile = messagesConfig.getConfig()
+        registerConfig()
         prefix = messagesConfigFile.getString("prefix", "")!!
         registerCommands()
         registerEvents()
+        server.consoleSender.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize("&8[&b$pluginName&8] &aHas been enabled on version &8[&b$pluginVersion&8]"))
+    }
 
-        this.server.consoleSender.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize("&8[&b$pluginName&8] &aHas been enabled on version &8[&b$pluginVersion&8]"))
+    private fun registerConfig() {
+        config.options().copyDefaults()
+        saveDefaultConfig()
+        warpsConfig = CustomConfig("warps.yml")
+        warpsConfigFile = warpsConfig.getConfig()
+        messagesConfig = CustomConfig("messages.yml")
+        messagesConfigFile = messagesConfig.getConfig()
     }
 
     private fun registerCommands() {
         val perWorldWarpsCommand: PluginCommand? = getCommand("perworldwarps")
         perWorldWarpsCommand?.aliases = listOf("pww")
-        perWorldWarpsCommand?.tabCompleter = SubCommandsCompleter(this)
-        perWorldWarpsCommand?.setExecutor(PerWorldWarpsCommand(this))
-        getCommand("warp")?.setExecutor(WarpCommand(this))
-        getCommand("warp")?.tabCompleter = WarpsCompleter(this)
-        getCommand("warps")?.setExecutor(WarpsCommand(this))
-        getCommand("setwarp")?.setExecutor(SetWarpCommand(this))
+        perWorldWarpsCommand?.tabCompleter = SubCommandsCompleter()
+        perWorldWarpsCommand?.setExecutor(PerWorldWarpsCommand())
+        getCommand("warp")?.setExecutor(WarpCommand())
+        getCommand("warp")?.tabCompleter = WarpsCompleter()
+        getCommand("warps")?.setExecutor(WarpsCommand())
+        getCommand("setwarp")?.setExecutor(SetWarpCommand())
         getCommand("setwarp")?.tabCompleter = SetWarpCompleter()
-        getCommand("delwarp")?.setExecutor(DelWarpCommand(this))
-        getCommand("delwarp")?.tabCompleter = WarpsCompleter(this)
+        getCommand("delwarp")?.setExecutor(DelWarpCommand())
+        getCommand("delwarp")?.tabCompleter = WarpsCompleter()
     }
 
     private fun registerEvents() {
-        val pm: PluginManager = this.server.pluginManager
-        val inventoryManager: InventoryManager = InventoryManager.getInstance(this)
+        val pm: PluginManager = server.pluginManager
+        val inventoryManager: InventoryManager = InventoryManager.getInstance()
         pm.registerEvents(inventoryManager, this)
     }
 

@@ -1,12 +1,11 @@
 package net.serveminecraft.minecrafteros.perworldwarpsplus.tabcompleters
 
-import net.serveminecraft.minecrafteros.perworldwarpsplus.PerWorldWarpsPlus
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
 import org.bukkit.entity.Player
 
-class SubCommandsCompleter(val plugin: PerWorldWarpsPlus): TabCompleter {
+class SubCommandsCompleter: TabCompleter {
 
     override fun onTabComplete(sender: CommandSender, command: Command, label: String, args: Array<out String>?): MutableList<String> {
         if (sender !is Player || sender.isOp || (sender.hasPermission("perworldwarps.reload") && sender.hasPermission("perworldwarps.help")))

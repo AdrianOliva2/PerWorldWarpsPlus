@@ -1,19 +1,18 @@
 package net.serveminecraft.minecrafteros.perworldwarpsplus.configs
 
-import org.bukkit.configuration.file.FileConfiguration
-import org.bukkit.configuration.file.YamlConfiguration
-
-import java.io.File
-import java.io.InputStream
-
 import net.serveminecraft.minecrafteros.perworldwarpsplus.PerWorldWarpsPlus
 import org.bukkit.Bukkit
+import org.bukkit.configuration.file.FileConfiguration
+import org.bukkit.configuration.file.YamlConfiguration
+import java.io.File
 import java.io.IOException
+import java.io.InputStream
 import java.io.InputStreamReader
 import java.util.logging.Level
 
-class CustomConfig(private val configFileName: String, private val plugin: PerWorldWarpsPlus) {
+class CustomConfig(private val configFileName: String) {
 
+    private val plugin: PerWorldWarpsPlus = PerWorldWarpsPlus.getInstance()
     private var dataConfig: FileConfiguration? = null
     private var configFile: File? = null
 

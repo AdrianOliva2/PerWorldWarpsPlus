@@ -1,28 +1,68 @@
 Items:
+  # Default warp item showed in warps menu if the user doesn't have a item in his main hand.
   warpsDefaultItem:
+    # The type of the item ex: GRASS_BLOCK.
     type: 'GRASS_BLOCK'
+    # The display name of the item, you can use %warp% to display the warp name in the item and color codes.
     display-name: '&7Warp &e%warp%'
+    # The lore of the item, you can use %warp% to display the warp name in the lore, color codes in multiple lines.
     lore:
       - '&eThis is the warp &c%warp%'
+      # - '&eClick to teleport'
+
+# Configuration of the warps menu.
 Menu:
+  # The title of the warps menu, you can use color codes.
   title: '&6&lWarps'
+
+  # There are the items showed in the warps menu as the previous page, next page, close menu and the border item.
   item:
+    # The border item is the item that will be showed around all the border of the menu.
     borderItem:
+      # The type of the item ex: GRAY_STAINED_GLASS_PANE.
       type: GRAY_STAINED_GLASS_PANE
+      # The display name of the item, you can use color codes.
       display-name: '&f'
+      # The lore of the item, you can use color codes in multiple lines.
       lore:
+        # - '&7This is the border'
+
+    # The previous page item is the item that will be showed in the previous page slot.
     previousPage:
+      # The type of the item ex: ARROW.
       type: ARROW
+      # The display name of the item, you can use color codes.
       display-name: '&7Previous page'
+      # The lore of the item, you can use color codes in multiple lines.
       lore:
+        # - '&7This is the previous page'
+
+    # The actual page item is the item that will be showed in the actual page slot.
     actualPage:
+      # The type of the item ex: GREEN_STAINED_GLASS_PANE.
       type: GREEN_STAINED_GLASS_PANE
+      # The display name of the item, you can use %actualPlayerPage% to display the actual page and %maxPage% to display the max page, color codes.
       display-name: '&7Page &a&l%actualPlayerPage% &7/ &c&l%maxPage%'
+      # The lore of the item, you can use color codes in multiple lines.
+      lore:
+        # - '&7This is the actual page'
+
+    # The next page item is the item that will be showed in the next page slot.
     nextPage:
+      # The type of the item ex: ARROW.
       type: ARROW
+      # The display name of the item, you can use color codes.
       display-name: '&7Next page'
+      # The lore of the item, you can use color codes in multiple lines.
       lore:
+        # - '&7This is the next page'
+
+    # The close menu item is the item that will be showed in the close menu slot.
     closeMenu:
+      # The type of the item ex: BARRIER.
       type: BARRIER
+      # The display name of the item, you can use color codes.
       display-name: '&c&lClose'
+      # The lore of the item, you can use color codes in multiple lines.
       lore:
+        # - '&7Click to close the menu'

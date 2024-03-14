@@ -2,9 +2,9 @@ package net.serveminecraft.minecrafteros.perworldwarpsplus.commands
 
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
+import net.serveminecraft.minecrafteros.perworldwarpsplus.PerWorldWarpsPlus
 import net.serveminecraft.minecrafteros.perworldwarpsplus.managers.InventoryManager
 import net.serveminecraft.minecrafteros.perworldwarpsplus.utils.MessagesUtil
-import net.serveminecraft.minecrafteros.perworldwarpsplus.PerWorldWarpsPlus
 import org.bukkit.Bukkit
 import org.bukkit.World
 import org.bukkit.command.Command
@@ -13,10 +13,10 @@ import org.bukkit.command.CommandSender
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
-import java.lang.StringBuilder
 
-class WarpsCommand(private val plugin: PerWorldWarpsPlus): CommandExecutor {
+class WarpsCommand: CommandExecutor {
 
+    private val plugin: PerWorldWarpsPlus = PerWorldWarpsPlus.getInstance()
     private val replaces: HashMap<String, String> = HashMap()
     private var messagesConfig: FileConfiguration = plugin.messagesConfigFile
 
@@ -102,7 +102,7 @@ class WarpsCommand(private val plugin: PerWorldWarpsPlus): CommandExecutor {
             }
         } else {
             val player: Player = sender
-            val inventoryManager = InventoryManager.getInstance(plugin)
+            val inventoryManager = InventoryManager.getInstance()
             val inventory: Inventory = inventoryManager.createInventory(player)
             player.openInventory(inventory)
         }

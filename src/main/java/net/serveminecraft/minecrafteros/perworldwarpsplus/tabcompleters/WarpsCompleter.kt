@@ -1,6 +1,5 @@
 package net.serveminecraft.minecrafteros.perworldwarpsplus.tabcompleters
 
-import net.serveminecraft.minecrafteros.perworldwarpsplus.PerWorldWarpsPlus
 import net.serveminecraft.minecrafteros.perworldwarpsplus.commands.WarpsCommand
 import org.bukkit.Bukkit
 import org.bukkit.World
@@ -9,10 +8,10 @@ import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
 import org.bukkit.entity.Player
 
-class WarpsCompleter(val plugin: PerWorldWarpsPlus): TabCompleter {
+class WarpsCompleter: TabCompleter {
 
     override fun onTabComplete(sender: CommandSender, command: Command, label: String, args: Array<out String>?): MutableList<String>? {
-        val warpsCommand = WarpsCommand(plugin)
+        val warpsCommand = WarpsCommand()
         if (sender !is Player){
             if (label != "delwarp") return emptyList<String>().toMutableList()
 

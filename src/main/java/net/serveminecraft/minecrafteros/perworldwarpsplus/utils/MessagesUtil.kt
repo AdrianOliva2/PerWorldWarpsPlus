@@ -1,8 +1,5 @@
 package net.serveminecraft.minecrafteros.perworldwarpsplus.utils
 
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.TextComponent
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import org.bukkit.configuration.file.FileConfiguration
 
 class MessagesUtil {
@@ -29,18 +26,5 @@ class MessagesUtil {
             }
             return configMessages
         }
-
-        /*fun colorizeList(list: MutableList<String>?): MutableList<Component>? {
-            val colorizedMessages: MutableList<Component>? = ListUtils.stringListToComponentList(list)
-            if (colorizedMessages != null) {
-                for (i in 0..<colorizedMessages.size) {
-                    if (colorizedMessages.elementAtOrNull(i) != null) {
-                        colorizedMessages[i] = LegacyComponentSerializer.legacyAmpersand().deserialize(colorizedMessages.elementAt(i))
-                    }
-                }
-            }
-            return colorizedMessages
-        }*/
     }
-
 }

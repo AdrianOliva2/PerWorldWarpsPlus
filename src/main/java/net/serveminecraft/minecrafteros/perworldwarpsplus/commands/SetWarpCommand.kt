@@ -1,11 +1,10 @@
 package net.serveminecraft.minecrafteros.perworldwarpsplus.commands
 
-import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
-import net.serveminecraft.minecrafteros.perworldwarpsplus.utils.ListUtils
-import net.serveminecraft.minecrafteros.perworldwarpsplus.utils.MessagesUtil
 import net.serveminecraft.minecrafteros.perworldwarpsplus.PerWorldWarpsPlus
 import net.serveminecraft.minecrafteros.perworldwarpsplus.managers.InventoryManager
+import net.serveminecraft.minecrafteros.perworldwarpsplus.utils.ListUtils
+import net.serveminecraft.minecrafteros.perworldwarpsplus.utils.MessagesUtil
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.World
@@ -17,8 +16,9 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 
-class SetWarpCommand(private val plugin: PerWorldWarpsPlus): CommandExecutor {
+class SetWarpCommand: CommandExecutor {
 
+    private val plugin: PerWorldWarpsPlus = PerWorldWarpsPlus.getInstance()
     private val replaces: HashMap<String, String> = HashMap()
     private var messagesConfig: FileConfiguration = plugin.messagesConfigFile
 
@@ -69,7 +69,7 @@ class SetWarpCommand(private val plugin: PerWorldWarpsPlus): CommandExecutor {
 
             plugin.saveWarpsConfig()
             plugin.reloadWarpsConfig()
-            val inventoryManager: InventoryManager = InventoryManager.getInstance(plugin)
+            val inventoryManager: InventoryManager = InventoryManager.getInstance()
             inventoryManager.reloadAllWarpInventories()
             val message = LegacyComponentSerializer.legacyAmpersand().deserialize(MessagesUtil.getFullStringFromConfig(messagesConfig, "warp-created-successfully", replaces))
             player.sendMessage(message)

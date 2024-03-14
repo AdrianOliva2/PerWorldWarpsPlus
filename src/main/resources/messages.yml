@@ -1,23 +1,46 @@
+# This file is used to configure the messages of the plugin.
+
+# The prefix of the plugin.
 prefix: "&b&lPerWorldWarps &e>&6> &r"
+
+# The messages of the plugin.
+
+# The message that will be showed when a player doesn't have permission to do something.
 no-permission: "%prefix%&cYou don't have permission to do this."
+# The message that will be showed when a player uses command "/setwarp" incorrectly.
 setwarp-command-help: "%prefix%&7Use &e/setwarp <warp_name> <permission: true | false (OPTIONAL)> &7with an item in your main hand to create a new warp."
+# The message that will be showed when a player uses command "/delwarp" incorrectly.
 delwarp-command-help: "%prefix%&7Use &e/delwarp <warp_name> &7to delete an existent warp."
+# The message that will be showed when console uses command "/delwarp" incorrectly.
 console-delwarp-command-help: "%prefix%&7Use &e/delwarp <world_name> <warp_name> &7to delete an existent warp."
+# The message that will be showed when console put a world name that doesn't exist.
 console-world-not-exists: "%prefix%&cThe world &7%world% &cdoesn't exist."
+# The message that will be showed when console uses command "/warp" or "/warps".
 console-available-warps: "%prefix%&7Available warps: &a%warps%"
+# The message that will be showed when console uses command "/warp" or "/warps" and there is no available warp.
 console-no-available-warps: "%prefix%&cThere is no available warp."
+# The message that will be showed when a player uses command "/warp" incorrectly.
 warp-command-help: "%prefix%&7Use &e/warp <warp_name> &7to teleport to an existent warp."
+# The message that will be showed when a player click in one warp and plugin is teleporting this user.
 teleporting-to-warp: "%prefix%&7Teleporting to warp &e%warp%&7."
+# The message that will be showed when console uses a command that only can be executed by one player.
 console-command-error: "%prefix%&cThis command can only be executed by one player."
+# The message that will be showed when a player uses command "/setwarp" and the warp already exists.
 warp-already-exists: "%prefix%&cThe warp &7%warp% &calready exists."
+# The message that will be showed when a player uses command "/delwarp" and the warp not exists.
 warp-not-exists: "%prefix%&cThe warp &7%warp% &cdoesn't exist."
+# The message that will be showed when a player uses command "/setwarp" and the warp was created successfully.
 warp-created-successfully: "%prefix%&7The warp &e%warp% &7has been created successfully."
+# The message that will be showed when a player uses command "/delwarp" and the warp was deleted successfully.
 warp-deleted-successfully: "%prefix%&7The warp &e%warp% &7has been deleted successfully."
+# The message that will be showed when a player uses command "/perworldwarps reload" and the plugin was succesfully reloaded.
 plugin-reloaded-successfully: "%prefix%&7The plugin has reloaded successfully."
+# The message that will be showed when a player or console uses command "/perworldwarps help" or "/perworldwarps".
 help:
   - "&7--------------- Help of &b&lPerWorldWarps &7---------------"
   - "&e/perworldwarps &7To see this help."
   - "&e/perworldwarps help &7To see this help."
+  - "&e/perworldwarps reload &7To reload this plugin."
   - "&e/setwarp <warp_name> &7To create a new warp."
   - "&e/setwarp <warp_name> <permission: true | false (OPTIONAL)> &7To create a warp with a permission."
   - "&e/delwarp <warp_name> &7To delete an existent warp."

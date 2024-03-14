@@ -2,11 +2,11 @@ package net.serveminecraft.minecrafteros.perworldwarpsplus.managers
 
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
+import net.serveminecraft.minecrafteros.perworldwarpsplus.PerWorldWarpsPlus
 import net.serveminecraft.minecrafteros.perworldwarpsplus.commands.WarpCommand
 import net.serveminecraft.minecrafteros.perworldwarpsplus.commands.WarpsCommand
 import net.serveminecraft.minecrafteros.perworldwarpsplus.namespacedkeys.Keys
 import net.serveminecraft.minecrafteros.perworldwarpsplus.utils.ListUtils
-import net.serveminecraft.minecrafteros.perworldwarpsplus.PerWorldWarpsPlus
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.World
@@ -24,12 +24,12 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.persistence.PersistentDataType
 
-class InventoryManager private constructor(private val plugin: PerWorldWarpsPlus) : Listener {
+class InventoryManager private constructor() : Listener {
 
     companion object {
         private lateinit var instance: InventoryManager
-        fun getInstance(plugin: PerWorldWarpsPlus): InventoryManager {
-            if (!this::instance.isInitialized) instance = InventoryManager(plugin)
+        fun getInstance(): InventoryManager {
+            if (!this::instance.isInitialized) instance = InventoryManager()
             return instance
         }
     }
@@ -38,6 +38,7 @@ class InventoryManager private constructor(private val plugin: PerWorldWarpsPlus
     private var config: FileConfiguration
     private var warpsConfiguration: FileConfiguration
     private var opened = false
+    private val plugin: PerWorldWarpsPlus = PerWorldWarpsPlus.getInstance()
 
     init {
         actualPlayersPage = HashMap()
@@ -121,7 +122,7 @@ class InventoryManager private constructor(private val plugin: PerWorldWarpsPlus
         val previousPageItem = ItemStack(Material.getMaterial(material!!)!!)
         material = config.getString("Menu.item.nextPage.type")
         val nextPageItem = ItemStack(Material.getMaterial(material!!)!!)
-        val warpsCommand = WarpsCommand(plugin)
+        val warpsCommand = WarpsCommand()
         val warpsItems = getWarpsItemsList(player.world, warpsCommand.getAvailableWarpsForPlayer(player))
         val inventoryTitle = config.getString("Menu.title")!!
         val inventory = Bukkit.createInventory(player, 54, LegacyComponentSerializer.legacyAmpersand().deserialize(inventoryTitle))
@@ -235,7 +236,7 @@ class InventoryManager private constructor(private val plugin: PerWorldWarpsPlus
                     val itemMeta: ItemMeta = item.itemMeta
                     val warp: String? = itemMeta.persistentDataContainer.get(Keys.WARPS_ITEMS, PersistentDataType.STRING)
                     if (!warp.isNullOrEmpty()) {
-                        val warpCommand = WarpCommand(plugin)
+                        val warpCommand = WarpCommand()
                         warpCommand.teleport(playerClicked, warpsConfiguration, warp)
                     }
                 }
